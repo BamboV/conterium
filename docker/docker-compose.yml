@@ -1,0 +1,96 @@
+version: '2'
+services:
+
+  monitorrent:
+     container_name: monitorrent
+     hostname: monitorrent
+     image: werwolfby/alpine-monitorrent
+     ports:
+       - 6687:6687/tcp
+     volumes:
+       - /opt/mediacenter/monitorrent-db:/db
+     environment:
+       - MONITORRENT_DB_PATH=/db/monitorrent.db
+     links:
+       - transmission
+
+  transmission:
+      container_name: transmission
+      hostname: transmission
+      image: linuxserver/transmission
+      ports:
+        - 9091:9091/tcp
+        - 51413:51413/tcp
+        - 51413:51413/udp
+      volumes:
+        - /opt/mediacenter/transmission-config:/config
+        - /data/Media/Downloads:/downloads
+        - /data/Media/Torrents:/watch
+      environment:
+        - PGID=1000
+        - PUID=1000
+
+  plex:
+      container_name: plex
+      hostname: plex
+      image: plexinc/pms-docker:plexpass
+      restart: unless-stopped
+      ports:
+        - 32400:32400/tcp
+        - 33400:33400/tcp
+        - 3005:3005/tcp
+        - 8324:8324/tcp
+        - 32469:32469/tcp
+        - 1900:1900/udp
+        - 32410:32410/udp
+        - 32412:32412/udp
+        - 32413:32413/udp
+        - 32414:32414/udp
+      environment:
+        - ADVERTISE_IP=http://127.0.0.1:32400/
+        - PLEX_UID=1000
+        - PLEX_GID=1000
+      volumes:
+        - /opt/mediacenter/plex-config:/config
+        - /opt/mediacenter/plex-transcode:/transcode
+        - /data/Media:/Media
+
+
+  fpm:
+      container_name: fpm
+      image: php:7.0-fpm
+      links:
+          - transmission
+      expose:
+          - "9000"
+      volumes_from:
+          - app
+
+  app:
+      build: ../web
+      container_name: app
+      volumes:
+        - ../web:/var/www/web
+
+  nginx:
+      container_name: nginx
+      build: ./nginx
+      ports:
+          - 8080:80
+      links:
+          - fpm
+      volumes_from:
+          - app
+      volumes:
+          - ../web/logs/nginx/:/var/log/nginx
+#
+#  db:
+#      image: mysql
+#      container_name: mysql
+#      ports:
+#          - 3306:3306
+#      environment:
+#          MYSQL_ROOT_PASSWORD: root
+#          MYSQL_DATABASE: db_local
+#          MYSQL_USER: web
+#          MYSQL_PASSWORD: fsdakwWEfsdl2Eo3
