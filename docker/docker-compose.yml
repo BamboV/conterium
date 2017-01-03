@@ -69,6 +69,7 @@ services:
   app:
       build: ../web
       container_name: app
+      tty: true
       volumes:
         - ../web:/var/www/web
 
