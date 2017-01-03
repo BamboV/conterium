@@ -88,8 +88,8 @@ services:
       restart: 'no'
       image: composer/composer:php7
       command: install
-      volumes_from:
-          - app
+      volumes:
+          - ../web:/app
 #
 #  db:
 #      image: mysql
