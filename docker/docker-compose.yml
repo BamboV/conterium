@@ -83,6 +83,13 @@ services:
           - app
       volumes:
           - ../web/logs/nginx/:/var/log/nginx
+
+  composer:
+      restart: 'no'
+      image: composer/composer:php7
+      command: install
+      volumes_from:
+          - app
 #
 #  db:
 #      image: mysql
