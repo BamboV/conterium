@@ -3,5 +3,7 @@ services:
     app:
         build:
             args:
-                RUTRACKER_LOGIN: {YOUR LOGIN}
-                RUTRACKER_PASSWORD: {YOUR PASSWORD}
+                RUTRACKER_LOGIN: {YOUR RUTRACKER LOGIN}
+                RUTRACKER_PASSWORD: {YOUR RUTRACKER PASSWORD}
+                LOGIN: {YOUR LOGIN}
+                PASSWORD: {YOUR PASSWORD}
