@@ -1,0 +1,7 @@
+version: '2'
+services:
+    app:
+        build:
+            args:
+                RUTRACKER_LOGIN: {YOUR LOGIN}
+                RUTRACKER_PASSWORD: {YOUR PASSWORD}

@@ -4,7 +4,7 @@ services:
   monitorrent:
      container_name: monitorrent
      hostname: monitorrent
-     image: werwolfby/alpine-monitorrent
+     build: ./monitorrent
      ports:
        - 6687:6687/tcp
      volumes:
@@ -17,7 +17,7 @@ services:
   transmission:
       container_name: transmission
       hostname: transmission
-      image: linuxserver/transmission
+      build: ./transmission
       ports:
         - 9091:9091/tcp
         - 51413:51413/tcp
@@ -33,7 +33,7 @@ services:
   plex:
       container_name: plex
       hostname: plex
-      image: plexinc/pms-docker:plexpass
+      build: ./plex
       restart: unless-stopped
       ports:
         - 32400:32400/tcp
@@ -67,11 +67,16 @@ services:
           - app
 
   app:
-      build: ../web
+      build:
+          context: ./rutrackerDownloader
+          args:
+            RUTRACKER_LOGIN: ${RUTRACKER_LOGIN}
+            RUTRACKER_PASSWORD: ${RUTRACKER_PASSWORD}
       container_name: app
-      tty: true
-      volumes:
-        - ../web:/var/www/web
+
+
+#      volumes:
+#        - /conterium:/var/www/web
 
   nginx:
       container_name: nginx
@@ -82,15 +87,15 @@ services:
           - fpm
       volumes_from:
           - app
-      volumes:
-          - ../web/logs/nginx/:/var/log/nginx
+#      volumes:
+#          - /conterium/logs/nginx/:/var/log/nginx
 
-  composer:
-      restart: 'no'
-      image: composer/composer:php7
-      command: install
-      volumes:
-          - ../web:/app
+#  composer:
+#      restart: 'no'
+#      image: composer/composer:php7
+#      command: install
+#      volumes:
+#          - /conterium:/app
 #
 #  db:
 #      image: mysql
