@@ -69,14 +69,7 @@ services:
   app:
       build:
           context: ./rutrackerDownloader
-          args:
-            RUTRACKER_LOGIN: ${RUTRACKER_LOGIN}
-            RUTRACKER_PASSWORD: ${RUTRACKER_PASSWORD}
       container_name: app
-
-
-#      volumes:
-#        - /conterium:/var/www/web
 
   nginx:
       container_name: nginx
@@ -87,23 +80,12 @@ services:
           - fpm
       volumes_from:
           - app
-#      volumes:
-#          - /conterium/logs/nginx/:/var/log/nginx
 
-#  composer:
-#      restart: 'no'
-#      image: composer/composer:php7
-#      command: install
-#      volumes:
-#          - /conterium:/app
-#
-#  db:
-#      image: mysql
-#      container_name: mysql
-#      ports:
-#          - 3306:3306
-#      environment:
-#          MYSQL_ROOT_PASSWORD: root
-#          MYSQL_DATABASE: db_local
-#          MYSQL_USER: web
-#          MYSQL_PASSWORD: fsdakwWEfsdl2Eo3
+  filebot:
+      build: ./filebot
+      container_name: filebot
+      volumes:
+          - /data/Media:/data/Media:rw
+          - /data/Media/Downloads/complete:/data/Media/Downloads/complete:rw
+          - /opt/mediacenter/filebot-config:/config:rw
+          - /etc/localtime:/etc/localtime
