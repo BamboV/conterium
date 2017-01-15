@@ -7,3 +7,10 @@ services:
                 RUTRACKER_PASSWORD: {YOUR RUTRACKER PASSWORD}
                 LOGIN: {YOUR LOGIN}
                 PASSWORD: {YOUR PASSWORD}
+
+    filebot:
+            build:
+                args:
+                    OPENSUBTITLES_LOGIN:
+                    OPENSUBTITLES_PASSWORD:
+                    OPENSUBTITLES_LANG: ru

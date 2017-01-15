@@ -2,3 +2,4 @@
 docker-compose.override.yml
 docker-compose.override-dev.yml
 rutrackerDownloader/Dockerfile-dev
+*-e
