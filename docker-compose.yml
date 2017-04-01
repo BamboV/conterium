@@ -1,6 +1,5 @@
 version: '2'
 services:
-
   monitorrent:
      container_name: monitorrent
      hostname: monitorrent
@@ -29,6 +28,8 @@ services:
       environment:
         - PGID=1000
         - PUID=1000
+      links:
+        - filebot
 
   plex:
       container_name: plex
@@ -55,32 +56,6 @@ services:
         - /opt/mediacenter/plex-transcode:/transcode
         - /data/Media:/Media
 
-
-  fpm:
-      container_name: fpm
-      image: php:7.0-fpm
-      links:
-          - transmission
-      expose:
-          - "9000"
-      volumes_from:
-          - app
-
-  app:
-      build:
-          context: ./rutrackerDownloader
-      container_name: app
-
-  nginx:
-      container_name: nginx
-      build: ./nginx
-      ports:
-          - 8080:80
-      links:
-          - fpm
-      volumes_from:
-          - app
-
   filebot:
       build: ./filebot
       container_name: filebot
@@ -89,3 +64,5 @@ services:
           - /data/Media/Downloads/complete:/data/Media/Downloads/complete:rw
           - /opt/mediacenter/filebot-config:/config:rw
           - /etc/localtime:/etc/localtime
+      ports:
+          - 8001:8001/tcp
